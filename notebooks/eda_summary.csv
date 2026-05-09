@@ -1,0 +1,2 @@
+total_images,total_defects,pollution_count,damaged_count,pollution_ratio,damaged_ratio,swelling_true,is_normal_true,pollution_area_median,damaged_area_median
+249,1139,912,227,0.8007,0.1993,0,160,139.375,420.5

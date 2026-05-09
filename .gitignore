@@ -1,0 +1,23 @@
+# [Pathon]
+venv_battery/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# [Conductor & Tools]
+.omc/
+.gemini/
+.gemini/tmp/
+conductor/
+
+# [IDE & OS]
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# [Data]
+battery_image/
+battery_label/
+docs/

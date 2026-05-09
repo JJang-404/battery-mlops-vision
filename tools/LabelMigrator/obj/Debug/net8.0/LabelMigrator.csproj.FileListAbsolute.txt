@@ -1,0 +1,14 @@
+D:\02.study\part4_wj\Battery\Battery_Project\tools\LabelMigrator\obj\Debug\net8.0\LabelMigrator.GeneratedMSBuildEditorConfig.editorconfig
+D:\02.study\part4_wj\Battery\Battery_Project\tools\LabelMigrator\obj\Debug\net8.0\LabelMigrator.AssemblyInfoInputs.cache
+D:\02.study\part4_wj\Battery\Battery_Project\tools\LabelMigrator\obj\Debug\net8.0\LabelMigrator.AssemblyInfo.cs
+D:\02.study\part4_wj\Battery\Battery_Project\tools\LabelMigrator\obj\Debug\net8.0\LabelMigrator.csproj.CoreCompileInputs.cache
+D:\02.study\part4_wj\Battery\Battery_Project\tools\LabelMigrator\bin\Debug\net8.0\LabelMigrator.exe
+D:\02.study\part4_wj\Battery\Battery_Project\tools\LabelMigrator\bin\Debug\net8.0\LabelMigrator.deps.json
+D:\02.study\part4_wj\Battery\Battery_Project\tools\LabelMigrator\bin\Debug\net8.0\LabelMigrator.runtimeconfig.json
+D:\02.study\part4_wj\Battery\Battery_Project\tools\LabelMigrator\bin\Debug\net8.0\LabelMigrator.dll
+D:\02.study\part4_wj\Battery\Battery_Project\tools\LabelMigrator\bin\Debug\net8.0\LabelMigrator.pdb
+D:\02.study\part4_wj\Battery\Battery_Project\tools\LabelMigrator\obj\Debug\net8.0\LabelMigrator.dll
+D:\02.study\part4_wj\Battery\Battery_Project\tools\LabelMigrator\obj\Debug\net8.0\refint\LabelMigrator.dll
+D:\02.study\part4_wj\Battery\Battery_Project\tools\LabelMigrator\obj\Debug\net8.0\LabelMigrator.pdb
+D:\02.study\part4_wj\Battery\Battery_Project\tools\LabelMigrator\obj\Debug\net8.0\LabelMigrator.genruntimeconfig.cache
+D:\02.study\part4_wj\Battery\Battery_Project\tools\LabelMigrator\obj\Debug\net8.0\ref\LabelMigrator.dll
