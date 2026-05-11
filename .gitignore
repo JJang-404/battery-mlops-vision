@@ -20,4 +20,6 @@ Thumbs.db
 # [Data]
 battery_image/
 battery_label/
+battery_mask/
+pretrained_aihub/
 docs/
