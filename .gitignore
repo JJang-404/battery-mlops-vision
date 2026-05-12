@@ -23,3 +23,5 @@ battery_label/
 battery_mask/
 pretrained_aihub/
 docs/
+models/*.pt
+models/*.onnx
