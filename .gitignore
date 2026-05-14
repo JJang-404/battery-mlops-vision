@@ -1,28 +1,66 @@
-# [Pathon]
+# ==========================================
+# Python
+# ==========================================
 venv_battery/
 __pycache__/
 *.py[cod]
 *$py.class
 .pytest_cache/
+.ipynb_checkpoints/
 
-# [Conductor & Tools]
+# ==========================================
+# Conductor & OMC tooling
+# ==========================================
 .omc/
 .gemini/
 .gemini/tmp/
 conductor/
 
-# [IDE & OS]
+# ==========================================
+# IDE & OS
+# ==========================================
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
 
-# [Data]
+# ==========================================
+# Visual Studio 2022 (C# 데모용)
+# ==========================================
+.vs/
+**/bin/
+**/obj/
+*.user
+*.suo
+*.userprefs
+*.sln.docstates
+
+# Visual Studio Code Coverage / Test Results
+TestResults/
+*.coverage
+*.coveragexml
+
+# ==========================================
+# Data & 대용량 산출물
+# ==========================================
 battery_image/
 battery_label/
 battery_mask/
 pretrained_aihub/
+
+# 개인 문서 백업 (포트폴리오 공개는 notebooks_docs/ 에서만)
 docs/
+
+# 모델 가중치 (GitHub 100MB 한계 초과 / 별도 배포)
 models/*.pt
 models/*.onnx
+models/*.onnx.data
 models/*.data
+**/models/*.onnx
+**/models/*.onnx.data
+
+# C# 데모 산출 이미지 (필요한 결과물은 notebooks_docs/ 로 복사)
+csharp_demo/BatteryDemo/BatteryDemo/bin/
+csharp_demo/BatteryDemo/BatteryDemo/obj/
+csharp_demo/BatteryDemo/BatteryDemo/overlay_*.png
+csharp_demo/BatteryDemo/BatteryDemo/before_after_*.png

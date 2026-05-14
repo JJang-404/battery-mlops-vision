@@ -93,7 +93,8 @@ Require cuDNN 9.* and CUDA 12.*
 pip install nvidia-cudnn-cu12 nvidia-cuda-runtime-cu12 nvidia-cublas-cu12
 ```
 
-> **주의 — `-cu12` 접미사의 의미**: "CUDA 12용 빌드"이지 라이브러리 자체 버전 12가 아니였습니다. cuFFT는 SONAME 11.x, cuRAND는 10.x. 초기에 5개 패키지를 `==12.*` 로 일괄 핀했다가 `No matching distribution` 에러를 만났습니다. DeepLab(Conv 위주)엔 cuFFT/cuRAND가 불필요해 3종이면 충분하였습니다.
+> [기술적 유의사항 — -cu12 접미사의 이해]
+> 해당 접미사는 패키지 내부 버전이 아닌 "CUDA 12 Toolkit과의 호환 빌드"를 의미함을 확인하였습니다. (실제 cuFFT는 11.x, cuRAND는 10.x 등 상이한 버전으로 구성됨). <br/>초기 구축 시 전체 라이브러리를 ==12.*로 일괄 핀(Pinning)할 경우 `No matching distribution` 에러가 발생함을 인지하고, DeepLab(Convolution 기반) 추론에 필수적인 3종(Runtime, cuDNN, cuBLAS) 위주로 의존성을 최적화하여 설치를 수행하였습니다
 
 ### 3-3. DLL 전이 의존성 — `os.add_dll_directory()` 만으론 부족 (silent fallback #3)
 
@@ -137,18 +138,19 @@ import onnxruntime as ort   # ← 반드시 위 등록 후에 import
 
 ## 4. 핵심 정리
 
-| 주의사항 | 올바른 진단 |
+| 주요 리스크 (Risk) | 검증된 대응 방안 (Technical Reality) |
 |---|---|
-| `get_available_providers()` 에 CUDA가 있다 = GPU가 작동한다 |  "등록 가능" ≠ "실제 사용". `sess.get_providers()` 별도 검증 필요합니다.  |
-| `onnxruntime-gpu` 만 설치 | ORT 1.20+ 는 cuDNN 9 / CUDA 12 런타임 DLL을 **별도 설치** 필요합니다. |
-| NVIDIA 드라이버 = CUDA 포함 | 드라이버는 GPU 통신만. 런타임 라이브러리는 별도로 필요합니다. |
-| CUDA EP 실패 시 ORT가 예외를 던진다 | ORT 1.20+ 는 fallback provider가 있으면 **조용히 CPU로 폴백** + 로그 한 줄 표시됩니다. |
-| `-cu12` = 라이브러리 버전 12 | "CUDA 12용 빌드"라는 의미. cuFFT는 11.x, cuRAND는 10.x |
-| `os.add_dll_directory()` 만으로 DLL 문제 해결 | 전이 의존성 해석은 PATH도 같이 봐야 합니다. |
+| `get_available_providers()` 목록 내 CUDA 존재 여부 확인 |  단순 등록 가능 여부가 아닌, `sess.get_providers()` 통해 실제 할당 상태 교차 검증 필요 |
+| `onnxruntime-gpu` 만 설치만으로 환경 구축 완료 오판 | ORT 1.20+ 는 cuDNN 9 / CUDA 12 런타임 DLL을 **별도 설치** 필요 |
+| OS 드라이버 설치와 CUDA 런타임 라이브러리 혼동 | GPU 통신용 드라이버와 별개로, 런타임 라이브러리는 별도로 필요 |
+| 가속 엔진(EP) 초기화 실패 시 예외 발생 기대 | 실패 시 조용히 CPU로 전환되는 'Silent Fallback' 특성을 인지하고, 초기화 로그 및 Latency 모니터링 수행 |
+| `-cu12` = 라이브러리 12 버전으로 해석 | "CUDA 12 환경 대응용 빌드"라는 명명 규칙을 이해하고, 하위 종속성 라이브러리의 개별 버전 확인" cuFFT는 11.x, cuRAND는 10.x |
+| `os.add_dll_directory()` 만으로 경로 문제 해결 시도 |  Python 3.8+의 공식 경로 추가 방식과 더불어, 전이 의존성 해석을 위한 PATH(환경 변수) 등록 병 |
 
 > 현장 배포 시 발생할 수 있는 환경 변수(DLL 누락, PATH 설정 등)를 매뉴얼화하여, 향후 인프라 구축 및 유지보수 과정에서 발생할 수 있는 기술적 리스크를 최소화하겠습니다.
 
-**제조업 도메인 관점**:
+>[제조 도메인 특화 전략]
 
-- **Damaged class recall이 모델 가치의 핵심 지표** — false negative(결함 놓침) 비용이 false positive 대비 압도적. 양자화/최적화 acceptance에선 mIoU 평균만 보면 안 됨.
-- **하드웨어 특성 고려한 의사결정** — 1660 SUPER(Turing TU116)는 INT8 Tensor Core가 없어 GPU INT8 가속이 크지 않다고 판단하였습니다. 그래서 FP32/FP16이 적합한 선택으로 판단하였습니다.
+> - **amaged Class Recall 기반의 가치 평가** : 비전 검사 프로세스에서 결함을 놓치는 '미검(False Negative)' 비용이 '과검(False Positive)'보다 압도적으로 높음을 확인하였습니다. <br/>이에 따라 단순 평균 지표인 mIoU에 매몰되지 않고, 결함 클래스(Damaged)의 Recall 유지를 최우선 목표로 설정하여 최적화 방향을 결정하였습니다.
+
+> - **- 하드웨어 아키텍처를 고려한 최적화 선택** : 사용 중인 GTX 1660 SUPER(Turing TU116)는 전용 INT8 Tensor Core가 부재하여, 양자화(INT8) 적용 시의 성능 이득보다 연산 정밀도 저하에 따른 리스크가 더 크다고 판단하였습니다.<br/> 결과적으로 모델의 신뢰성과 속도를 모두 확보할 수 있는 FP32 기반의 GPU 가속(CUDA EP)을 최종 솔루션으로 채택하였습니다.
