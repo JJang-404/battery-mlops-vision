@@ -1,24 +1,75 @@
-# Battery MLOps Vision — DeepLabV3+ 기반 배터리 외관 결함 검출 파이프라인
 
-본 프로젝트는 **AI 운영 및 검증/테스트 관점**에서 리튬이온 원통형 배터리의 외관 결함을 검출하는 DeepLabV3+ 세그멘테이션 파이프라인을 구축하고, **학습 → 검증 → 재학습 → ONNX 변환 → C# 데모 배포**까지 운영 사이클 전 구간을 직접 구현·검증한 개인 프로젝트입니다.
+---
+<div align="center">
 
-## 프로젝트 개요
+# Battery MLOps Vision
 
-| 항목 | 내용 |
-| :--- | :--- |
-| 데이터 | AI허브 「리튬이온 배터리 불량 이미지 (2023)」 249장 (보안상 현장 데이터 접근 불가) |
-| 클래스 | 3-class — background / Pollution(80%) / Damaged(20%) |
-| 모델 | DeepLabV3+ (DRN-D-54 backbone) — AI허브 공개 사전학습 가중치 활용 |
-| 배포 | ONNX Runtime CUDA EP + .NET 8 C# 데모 |
+### DeepLabV3+ 기반 리튬이온 배터리 외관 결함 검출 파이프라인
 
-## 핵심 결과 (정량 검증)
+_데이터 한 장에서 운영 데모까지 — 비전검사의 끝과 끝을 직접 잇다_
 
-| 지표 | AI허브 raw (v1) | fine-tune v2 + 후처리 (운영 채택) | 개선 |
-| :--- | :--- | :--- | :--- |
-| 정상품 과검율 | **100%** (24/24) | **4.2%** (1/24) | 약 24배 |
-| Instance Recall | 92.9% | 92.9% | 동일 |
-| 평균 오검 픽셀 | 6,831 | 10 | 약 680배 |
-| 추론 latency (CUDA EP) | 532ms | **102ms** | **5.2× 가속** |
+<br/>
+
+![Python](https://img.shields.io/badge/Python-3.10-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-DeepLabV3+-EE4C2C?style=for-the-badge&logo=pytorch&logoColor
+=white)
+![ONNX](https://img.shields.io/badge/ONNX-Runtime-005CED?style=for-the-badge&logo=onnx&logoColor=white)
+![CUDA](https://img.shields.io/badge/CUDA-EP-76B900?style=for-the-badge&logo=nvidia&logoColor=white)
+![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![C#](https://img.shields.io/badge/C%23-WPF_Demo-239120?style=for-the-badge&logo=csharp&logoColor=white)
+![Colab](https://img.shields.io/badge/Colab_Pro-T4-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=whi
+te)
+![Jupyter](https://img.shields.io/badge/Notebook-EDA→Verify-F37626?style=for-the-badge&logo=jupyter&logoColo
+r=white)
+
+<br/>
+
+```
+  ┌────────────────────────────────────────────────────────────────────────┐
+  │                                                                        │
+  │    EDA   →    학습    →   ONNX 변환   →   회귀 검증   →   C# 데모        │
+  │                                                                        │
+  │  [249장]   [DeepLabV3+]   [CUDA EP]     [v1 ↔ v2]      [.NET 8 WPF]    │
+  │                                                                        │
+  └────────────────────────────────────────────────────────────────────────┘
+```
+
+</div>
+
+---
+
+## 한눈에 보기
+
+> **Battery MLOps Vision**은 AI허브 리튬이온 배터리 데이터 249장으로
+> **학습 → 검증 → 재학습 → ONNX 변환 → C# 비전 데모 배포**까지
+> 운영 사이클 전 구간을 **구현·정량 검증**한 개인 포트폴리오 프로젝트입니다.
+
+```
+  ╔════════════════════╗      ╔════════════════════╗      ╔════════════════════╗
+  ║                    ║      ║                    ║      ║                    ║
+  ║      Notebook      ║ ───▶║       PyTorch      ║ ───▶ ║      C# Demo       ║
+  ║   EDA · 학습 · 검증 ║      ║   →  ONNX (CUDA)   ║      ║   비전 검사 UI      ║
+  ║                    ║      ║                    ║      ║                    ║
+  ╚════════════════════╝      ╚════════════════════╝      ╚════════════════════╝
+        notebooks/                  onnx_export                 csharp_demo/
+```
+
+---
+
+## 정량 성과 (Headline)
+
+<div align="center">
+
+| 지표 | AI허브 raw (v1) | fine-tune v2 + 후처리 | 개선 |
+|:---:|:---:|:---:|:---:|
+| **정상품 과검율**     | 100% (24/24) | **4.2%** (1/24) | **약 24×** |
+| **Instance Recall**  | 92.9%        | 92.9%           | 동일 유지 |
+| **평균 오검 픽셀**     | 6,831 px     | **10 px**       | **약 680×** |
+| **추론 Latency**     | 532 ms       | **102 ms**      | **5.2× 가속** |
+
+</div>
+
+---
 
 ## 운영 사이클
 
@@ -63,11 +114,6 @@
 | 캡 영역 과민 반응 | ColorJitter 증강이 캡 림 음영에 민감하게 학습 | ROI mask 도입 또는 증강 강도 감소 |
 | 모델 아키텍처 단일 | DeepLabV3+ 외 비교 미실시 | **U-Net / SegFormer / YOLOv8-seg 비교 학습 (계획)** |
 
-## Tech Stack
-
-- **Python**: PyTorch, ONNX, OpenCV, scikit-image
-- **C#**: .NET 8, ONNX Runtime (CUDA + CPU EP), WPF UI
-- **Tooling**: Google Colab Pro (T4), Git, Jupyter
 
 ## 디렉터리
 
@@ -77,3 +123,4 @@ notebooks_docs/   # 노트북 → 마크다운 변환본
 csharp_demo/      # .NET 8 + ONNX Runtime 추론 데모
 models/           # battery_deeplab_v2.onnx 등
 ```
+---
