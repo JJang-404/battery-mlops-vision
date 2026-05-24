@@ -6,30 +6,25 @@
 
 ### DeepLabV3+ 기반 리튬이온 배터리 외관 결함 검출 파이프라인
 
-_데이터 한 장에서 운영 데모까지 — 비전검사의 끝과 끝을 직접 잇다_
-
 <br/>
 
 ![Python](https://img.shields.io/badge/Python-3.10-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![PyTorch](https://img.shields.io/badge/PyTorch-DeepLabV3+-EE4C2C?style=for-the-badge&logo=pytorch&logoColor
-=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-DeepLabV3%2B-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
 ![ONNX](https://img.shields.io/badge/ONNX-Runtime-005CED?style=for-the-badge&logo=onnx&logoColor=white)
 ![CUDA](https://img.shields.io/badge/CUDA-EP-76B900?style=for-the-badge&logo=nvidia&logoColor=white)
 ![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
 ![C#](https://img.shields.io/badge/C%23-WPF_Demo-239120?style=for-the-badge&logo=csharp&logoColor=white)
-![Colab](https://img.shields.io/badge/Colab_Pro-T4-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=whi
-te)
-![Jupyter](https://img.shields.io/badge/Notebook-EDA→Verify-F37626?style=for-the-badge&logo=jupyter&logoColo
-r=white)
+![Colab](https://img.shields.io/badge/Colab_Pro-T4-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Notebook-EDA%E2%86%92Verify-F37626?style=for-the-badge&logo=jupyter&logoColor=white)
 
 <br/>
 
 ```
   ┌────────────────────────────────────────────────────────────────────────┐
   │                                                                        │
-  │    EDA   →    학습    →   ONNX 변환   →   회귀 검증   →   C# 데모        │
+  │    EDA   →    학습    →   ONNX 변환   →   회귀 검증   →   C# 데모       │
   │                                                                        │
-  │  [249장]   [DeepLabV3+]   [CUDA EP]     [v1 ↔ v2]      [.NET 8 WPF]    │
+  │  [249장]   [DeepLabV3+]   [CUDA EP]      [v1 ↔ v2]     [.NET 8 WPF]    │
   │                                                                        │
   └────────────────────────────────────────────────────────────────────────┘
 ```
@@ -44,14 +39,14 @@ r=white)
 > **학습 → 검증 → 재학습 → ONNX 변환 → C# 비전 데모 배포**까지
 > 운영 사이클 전 구간을 **구현·정량 검증**한 개인 포트폴리오 프로젝트입니다.
 
-```
-  ╔════════════════════╗      ╔════════════════════╗      ╔════════════════════╗
-  ║                    ║      ║                    ║      ║                    ║
-  ║      Notebook      ║ ───▶║       PyTorch      ║ ───▶ ║      C# Demo       ║
-  ║   EDA · 학습 · 검증 ║      ║   →  ONNX (CUDA)   ║      ║   비전 검사 UI      ║
-  ║                    ║      ║                    ║      ║                    ║
-  ╚════════════════════╝      ╚════════════════════╝      ╚════════════════════╝
-        notebooks/                  onnx_export                 csharp_demo/
+```text
+  ╔══════════════════════╗          ╔══════════════════════╗          ╔══════════════════════╗
+  ║                      ║          ║                      ║          ║                      ║
+  ║       Notebook       ║  ──▶    ║        PyTorch       ║   ──▶   ║       C# Demo        ║
+  ║   EDA · 학습 · 검증   ║         ║    → ONNX (CUDA)     ║          ║     비전 검사 UI      ║
+  ║                      ║          ║                      ║          ║                      ║ 
+  ╚══════════════════════╝          ╚══════════════════════╝          ╚══════════════════════╝
+        notebooks/                         onnx_export                       csharp_demo/
 ```
 
 ---
