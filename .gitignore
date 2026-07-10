@@ -47,6 +47,7 @@ battery_image/
 battery_label/
 battery_mask/
 pretrained_aihub/
+yolo_dataset/
 
 # 개인 문서 백업 (포트폴리오 공개는 notebooks_docs/ 에서만)
 docs/
@@ -56,8 +57,10 @@ models/*.pt
 models/*.onnx
 models/*.onnx.data
 models/*.data
+models/*.engine
 **/models/*.onnx
 **/models/*.onnx.data
+**/models/*.engine
 
 # C# 데모 산출 이미지 (필요한 결과물은 notebooks_docs/ 로 복사)
 csharp_demo/BatteryDemo/BatteryDemo/bin/
@@ -79,3 +82,4 @@ cpp_demo/third_party/
 cpp_demo/CPP_DEMO_GUIDE.md
 cpp_demo/OPENCV_INSTALL.md
 cpp_demo/QA_GUIDE.md
+
