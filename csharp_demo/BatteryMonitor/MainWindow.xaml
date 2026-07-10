@@ -1,0 +1,186 @@
+<Window x:Class="BatteryMonitor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Battery Vision Monitoring"
+        Width="1600" Height="940"
+        MinWidth="1180" MinHeight="720"
+        Background="{StaticResource WindowBrush}"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="82"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="34"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="White" BorderBrush="#696D70" BorderThickness="1">
+            <Grid Margin="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="160"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Background="{StaticResource AccentBrush}"
+                        BorderBrush="#315C5A" BorderThickness="1" Margin="0,0,8,0">
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="VISION" Foreground="White" FontSize="24"
+                                   FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <TextBlock Text="SYSTEM READY" Foreground="White" FontSize="11"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock Text="배터리 외관 검사 모니터링"
+                               FontSize="30" FontWeight="Bold" Foreground="#25282A"/>
+                    <TextBlock x:Name="InputFolderText"
+                               Text="입력 폴더를 준비하는 중입니다."
+                               FontSize="12" Foreground="#616568"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="StartButton" Content="START" Width="94"
+                            Background="#187B78" Click="StartButton_Click"/>
+                    <Button x:Name="StopButton" Content="STOP" Width="94"
+                            IsEnabled="False" Click="StopButton_Click"/>
+                    <Button Content="FOLDER" Width="94" Click="FolderButton_Click"/>
+                    <Button Content="EXIT" Width="94" Click="ExitButton_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" Margin="0,6,0,6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2.1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="235"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <GroupBox Grid.Column="0" Header="ORIGINAL IMAGE">
+                        <Border Background="#202224" BorderBrush="#777B7E" BorderThickness="1">
+                            <Image x:Name="OriginalImage" Stretch="Uniform"/>
+                        </Border>
+                    </GroupBox>
+
+                    <GroupBox Grid.Column="1" Header="INSPECTION OVERLAY">
+                        <Border Background="#202224" BorderBrush="#777B7E" BorderThickness="1">
+                            <Image x:Name="OverlayImage" Stretch="Uniform"/>
+                        </Border>
+                    </GroupBox>
+                </Grid>
+
+                <GroupBox Grid.Row="1" Header="INSPECTION HISTORY">
+                    <DataGrid x:Name="HistoryGrid"
+                              ItemsSource="{Binding Records}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              SelectionChanged="HistoryGrid_SelectionChanged"
+                              GridLinesVisibility="All"
+                              HeadersVisibility="Column"
+                              RowHeaderWidth="0"
+                              Background="White"
+                              BorderThickness="0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="No." Binding="{Binding Number}" Width="55"/>
+                            <DataGridTextColumn Header="File" Binding="{Binding FileName}" Width="*"/>
+                            <DataGridTextColumn Header="Result" Binding="{Binding Result}" Width="85"/>
+                            <DataGridTextColumn Header="Pollution px" Binding="{Binding PollutionPixels}" Width="110"/>
+                            <DataGridTextColumn Header="Damaged px" Binding="{Binding DamagedPixels}" Width="110"/>
+                            <DataGridTextColumn Header="Latency ms"
+                                                Binding="{Binding LatencyMs, StringFormat=F1}" Width="100"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+            </Grid>
+
+            <StackPanel Grid.Column="1">
+                <GroupBox Header="CURRENT INSPECTION">
+                    <Grid Margin="8">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="62"/>
+                            <RowDefinition Height="42"/>
+                            <RowDefinition Height="42"/>
+                            <RowDefinition Height="42"/>
+                            <RowDefinition Height="42"/>
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0" x:Name="ResultPanel" Background="#74797C"
+                                BorderBrush="#393C3E" BorderThickness="1">
+                            <TextBlock x:Name="ResultText" Text="STANDBY"
+                                       Foreground="White" FontSize="28" FontWeight="Bold"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Grid.Row="1" x:Name="CurrentFileText" Text="File: -"
+                                   VerticalAlignment="Center" FontSize="14"/>
+                        <TextBlock Grid.Row="2" x:Name="PollutionText" Text="Pollution: 0 px"
+                                   VerticalAlignment="Center" FontSize="14"/>
+                        <TextBlock Grid.Row="3" x:Name="DamagedText" Text="Damaged: 0 px"
+                                   VerticalAlignment="Center" FontSize="14"/>
+                        <TextBlock Grid.Row="4" x:Name="LatencyText" Text="Latency: 0.0 ms"
+                                   VerticalAlignment="Center" FontSize="14"/>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Header="BATCH STATUS">
+                    <Grid Margin="8">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="36"/>
+                            <RowDefinition Height="36"/>
+                            <RowDefinition Height="36"/>
+                            <RowDefinition Height="36"/>
+                            <RowDefinition Height="50"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" x:Name="TotalText" Text="Total: 0"
+                                   FontSize="15" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="1" x:Name="ProcessedText" Text="Processed: 0"
+                                   FontSize="15" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="2" x:Name="OkText" Text="OK: 0"
+                                   FontSize="15" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="3" x:Name="NgText" Text="NG: 0"
+                                   FontSize="15" VerticalAlignment="Center"/>
+                        <ProgressBar Grid.Row="4" x:Name="BatchProgress"
+                                     Minimum="0" Maximum="1" Height="22"
+                                     VerticalAlignment="Center" Foreground="#187B78"/>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Header="VIEW CONTROL">
+                    <UniformGrid Columns="2" Margin="4">
+                        <Button Content="PREVIOUS" Click="PreviousButton_Click"/>
+                        <Button Content="NEXT" Click="NextButton_Click"/>
+                    </UniformGrid>
+                </GroupBox>
+
+                <GroupBox Header="SYSTEM LOG">
+                    <ListBox x:Name="LogList" Height="190"
+                             Background="#25282A" Foreground="#E7E9EA"
+                             FontFamily="Consolas" FontSize="12"/>
+                </GroupBox>
+            </StackPanel>
+        </Grid>
+
+        <Border Grid.Row="2" Background="#3E4245" BorderBrush="#25282A" BorderThickness="1">
+            <Grid Margin="8,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="StatusText" Text="READY"
+                           Foreground="White" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" x:Name="ClockText"
+                           Foreground="White" VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

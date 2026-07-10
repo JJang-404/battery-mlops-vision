@@ -64,3 +64,18 @@ csharp_demo/BatteryDemo/BatteryDemo/bin/
 csharp_demo/BatteryDemo/BatteryDemo/obj/
 csharp_demo/BatteryDemo/BatteryDemo/overlay_*.png
 csharp_demo/BatteryDemo/BatteryDemo/before_after_*.png
+
+# ==========================================
+# C++ demo local-only files
+# ==========================================
+cpp_demo/build/
+cpp_demo/build-*/
+cpp_demo/build-mac/
+cpp_demo/models/
+cpp_demo/monitoring_output/
+cpp_demo/third_party/
+
+# 로컬 학습/설치 가이드 문서
+cpp_demo/CPP_DEMO_GUIDE.md
+cpp_demo/OPENCV_INSTALL.md
+cpp_demo/QA_GUIDE.md

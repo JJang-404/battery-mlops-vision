@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>BatteryMonitor</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../BatteryDemo/BatteryDemo/Inferencer.cs" Link="Engine/Inferencer.cs" />
+    <Compile Include="../BatteryDemo/BatteryDemo/Postprocessor.cs" Link="Engine/Postprocessor.cs" />
+
+    <None Include="../../cpp_demo/models/battery_deeplab_v1.onnx"
+          Link="models/battery_deeplab_v1.onnx"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../cpp_demo/models/battery_deeplab_v1.onnx.data"
+          Link="models/battery_deeplab_v1.onnx.data"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../cpp_demo/test_images/*.*"
+          Link="test_images/%(Filename)%(Extension)"
+          CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.26.0" />
+    <PackageReference Include="OpenCvSharp4.Windows" Version="4.13.0.20260302" />
+  </ItemGroup>
+</Project>
