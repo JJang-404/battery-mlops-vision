@@ -60,7 +60,7 @@ std::vector<fs::path> findImages(const fs::path& inputPath)
 
 int main(int argc, char* argv[])
 {
-    const fs::path modelPath = "models/battery_deeplab_v1.onnx";
+    const fs::path modelPath = "models/battery_deeplab_v2.onnx";
     const fs::path inputPath = argc > 1 ? fs::path(argv[1]) : fs::path("test_images");
     const fs::path outputDirectory = "monitoring_output";
 

@@ -13,11 +13,11 @@
     <Compile Include="../BatteryDemo/BatteryDemo/Inferencer.cs" Link="Engine/Inferencer.cs" />
     <Compile Include="../BatteryDemo/BatteryDemo/Postprocessor.cs" Link="Engine/Postprocessor.cs" />
 
-    <None Include="../../cpp_demo/models/battery_deeplab_v1.onnx"
-          Link="models/battery_deeplab_v1.onnx"
+    <None Include="../../cpp_demo/models/battery_deeplab_v2.onnx"
+          Link="models/battery_deeplab_v2.onnx"
           CopyToOutputDirectory="PreserveNewest" />
-    <None Include="../../cpp_demo/models/battery_deeplab_v1.onnx.data"
-          Link="models/battery_deeplab_v1.onnx.data"
+    <None Include="../../cpp_demo/models/battery_deeplab_v2.onnx.data"
+          Link="models/battery_deeplab_v2.onnx.data"
           CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../cpp_demo/test_images/*.*"
           Link="test_images/%(Filename)%(Extension)"

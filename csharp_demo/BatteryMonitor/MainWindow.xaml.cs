@@ -12,7 +12,7 @@ using OpenCvSharp;
 
 namespace BatteryMonitor;
 
-public partial class MainWindow : Window
+public partial class MainWindow : System.Windows.Window
 {
     private static readonly string[] ImageExtensions = [".png", ".jpg", ".jpeg", ".bmp"];
     private readonly DispatcherTimer _clockTimer;
@@ -40,7 +40,7 @@ public partial class MainWindow : Window
 
     private async void StartButton_Click(object sender, RoutedEventArgs e)
     {
-        string modelPath = Path.Combine(AppContext.BaseDirectory, "models", "battery_deeplab_v1.onnx");
+        string modelPath = Path.Combine(AppContext.BaseDirectory, "models", "battery_deeplab_v2.onnx");
         List<string> images = FindImages(_inputFolder);
 
         if (!File.Exists(modelPath)) {
@@ -56,6 +56,7 @@ public partial class MainWindow : Window
 
         Records.Clear();
         _selectedIndex = -1;
+        UpdateHistoryNavigation();
         _cancellation = new CancellationTokenSource();
         SetRunningState(true);
         TotalText.Text = $"Total: {images.Count}";
@@ -77,6 +78,7 @@ public partial class MainWindow : Window
                     _cancellation.Token);
 
                 Records.Add(record);
+                UpdateHistoryNavigation();
                 HistoryGrid.SelectedItem = record;
                 HistoryGrid.ScrollIntoView(record);
                 ShowRecord(record);
@@ -206,6 +208,15 @@ public partial class MainWindow : Window
     {
         StartButton.IsEnabled = !running;
         StopButton.IsEnabled = running;
+        FolderButton.IsEnabled = !running;
+        UpdateHistoryNavigation();
+    }
+
+    private void UpdateHistoryNavigation()
+    {
+        bool hasHistory = Records.Count > 0;
+        PreviousButton.IsEnabled = hasHistory && _selectedIndex > 0;
+        NextButton.IsEnabled = hasHistory && _selectedIndex < Records.Count - 1;
     }
 
     private void AddLog(string message)
@@ -221,9 +232,38 @@ public partial class MainWindow : Window
             Title = "검사 이미지 폴더 선택",
             InitialDirectory = Directory.Exists(_inputFolder) ? _inputFolder : null,
         };
-        if (dialog.ShowDialog() == true) {
+        if (dialog.ShowDialog(this) == true) {
             _inputFolder = dialog.FolderName;
             InputFolderText.Text = _inputFolder;
+            int imageCount = FindImages(_inputFolder).Count;
+            TotalText.Text = $"Total: {imageCount}";
+            StatusText.Text = imageCount > 0 ? "FOLDER READY - PRESS START" : "NO IMAGES";
+            AddLog($"Selected input folder: {_inputFolder} ({imageCount} images)");
+
+            Records.Clear();
+            _selectedIndex = -1;
+            UpdateHistoryNavigation();
+
+            if (imageCount > 0) {
+                string firstImage = FindImages(_inputFolder)[0];
+                OriginalImage.Source = LoadBitmap(firstImage);
+                OverlayImage.Source = null;
+                CurrentFileText.Text = $"File: {Path.GetFileName(firstImage)} (preview)";
+                ResultText.Text = "PRESS START";
+                ResultPanel.Background = new SolidColorBrush(Color.FromRgb(116, 121, 124));
+            }
+
+            if (imageCount == 0) {
+                OriginalImage.Source = null;
+                OverlayImage.Source = null;
+                CurrentFileText.Text = "File: -";
+                ResultText.Text = "NO IMAGES";
+                MessageBox.Show(
+                    "The selected folder has no PNG, JPG, JPEG, or BMP images.",
+                    "Input Folder",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }
             AddLog($"입력 폴더 변경: {_inputFolder}");
         }
     }
@@ -234,6 +274,7 @@ public partial class MainWindow : Window
         _selectedIndex = Math.Max(0, _selectedIndex - 1);
         HistoryGrid.SelectedItem = Records[_selectedIndex];
         ShowRecord(Records[_selectedIndex]);
+        UpdateHistoryNavigation();
     }
 
     private void NextButton_Click(object sender, RoutedEventArgs e)
@@ -242,11 +283,15 @@ public partial class MainWindow : Window
         _selectedIndex = Math.Min(Records.Count - 1, _selectedIndex + 1);
         HistoryGrid.SelectedItem = Records[_selectedIndex];
         ShowRecord(Records[_selectedIndex]);
+        UpdateHistoryNavigation();
     }
 
     private void HistoryGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (HistoryGrid.SelectedItem is InspectionRecord record) ShowRecord(record);
+        if (HistoryGrid.SelectedItem is InspectionRecord record) {
+            ShowRecord(record);
+            UpdateHistoryNavigation();
+        }
     }
 
     private void ExitButton_Click(object sender, RoutedEventArgs e)

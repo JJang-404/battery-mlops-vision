@@ -44,7 +44,8 @@
                             Background="#187B78" Click="StartButton_Click"/>
                     <Button x:Name="StopButton" Content="STOP" Width="94"
                             IsEnabled="False" Click="StopButton_Click"/>
-                    <Button Content="FOLDER" Width="94" Click="FolderButton_Click"/>
+                    <Button x:Name="FolderButton" Content="FOLDER" Width="94"
+                            Click="FolderButton_Click"/>
                     <Button Content="EXIT" Width="94" Click="ExitButton_Click"/>
                 </StackPanel>
             </Grid>
@@ -157,8 +158,10 @@
 
                 <GroupBox Header="VIEW CONTROL">
                     <UniformGrid Columns="2" Margin="4">
-                        <Button Content="PREVIOUS" Click="PreviousButton_Click"/>
-                        <Button Content="NEXT" Click="NextButton_Click"/>
+                        <Button x:Name="PreviousButton" Content="PREVIOUS"
+                                IsEnabled="False" Click="PreviousButton_Click"/>
+                        <Button x:Name="NextButton" Content="NEXT"
+                                IsEnabled="False" Click="NextButton_Click"/>
                     </UniformGrid>
                 </GroupBox>
 
